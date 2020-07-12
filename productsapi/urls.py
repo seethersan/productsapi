@@ -23,7 +23,8 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/', include([
         path('products/', include([
-            path('', views.Products.as_view(), name="get")
+            path('', views.Products.as_view(), name="get"),
+            path('bulk_insert', views.ProductsInsert.as_view(), name="insert")
         ]))
     ])),
 ]
