@@ -5,26 +5,26 @@ Django 3 project ready to deploy in AWS ElasticBeanstalk (Amazon Linux with pyth
 
 ```
 virtualenv env && source env/bin/activate
-´´´
+```
 
 2. Clone the repository
 
 ```
 git clone https://github.com/seethersan/productsapi.git
 cd productsapi
-´´´
+```
 
 3. Install requirements
 
 ```
 pip install -r requirements.txt
-´´´
+```
 
 4. Install CLI for AWS Elastic Beanstalk
 
 ```
 pip install awsebcli
-´´´
+```
 
 5. Initialize Elastic Beanstalk App. 
 ***You will need to configure awscli with your AWS account's credentials if you haven't done it before.
@@ -32,20 +32,20 @@ Also, at the moment the ebextensions config files are only compatible with Amazo
 
 ```
 eb init
-´´´
+```
 
 6. Create environment and deploy app
 ***It will create the RDS Postgres instance, set the RDS env variables and migrate the database***
 
 ```
 eb create
-´´´
+```
 
 7. Open app
 
 ```
 eb open
-´´´
+```
 
 The app has 2 urls:
 
@@ -66,7 +66,7 @@ The app has 2 urls:
             },...
         ]
     }
-    ´´´
+    ```
     If the products pass validation, it will be saved in the database, if not it will response with a report error in JSON format
 
     You can test it using curl:
@@ -101,4 +101,4 @@ The app has 2 urls:
             ]
         }' \
         http://productsapi-dev2.us-east-1.elasticbeanstalk.com/api/products/bulk_insert
-    ´´´
+    ```
