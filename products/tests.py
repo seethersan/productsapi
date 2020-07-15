@@ -71,8 +71,8 @@ class ProductView(TestCase):
                     "stock": 3
                 },
                 {
-                    "id": "product2",
-                    "name": "awesome product2",
+                    "id": "product1",
+                    "name": "awesome product1",
                     "value": 291.3,
                     "discount_value": 33.2,
                     "stock": 3
@@ -85,6 +85,49 @@ class ProductView(TestCase):
         self.assertEqual(products, response_products["products"])
 
     def test_product_post_success_response(self):
+        c = Client()
+        data = {
+            "id": "product2",
+            "name": "awesome product2",
+            "value": 29.3,
+            "discount_value": 3.2,
+            "stock": 3
+        }
+        response = c.post('/api/products/', json.dumps(data),
+                        content_type="application/json")
+        self.assertEqual(response.status_code, 200)
+
+    def test_product_post_fail_response(self):
+        c = Client()
+        data = {
+            "id": "product2",
+            "name": "awesome product2",
+            "value": 29.3,
+            "discount_value": 32.2,
+            "stock": -3
+        }
+        response = c.post('/api/products/', json.dumps(data),
+                        content_type="application/json")
+        self.assertEqual(response.status_code, 422)
+
+    def test_product_post_fail_validators(self):
+        c = Client()
+        data = {
+            "id": "productm",
+            "name": "aw",
+            "value": 0,
+            "discount_value": 32.2,
+            "stock": -3
+        }
+        response = c.post('/api/products/', json.dumps(data),
+                        content_type="application/json")
+        errors = json.loads(response.content)["errors"]
+        self.assertTrue("Invalid product name" in errors)
+        self.assertTrue("Invalid value" in errors)
+        self.assertTrue("Invalid discount value" in errors)
+        self.assertTrue("Invalid stock value" in errors)
+
+    def test_bulk_insert_post_success_response(self):
         c = Client()
         products = [
             	{
@@ -106,7 +149,7 @@ class ProductView(TestCase):
                         content_type="application/json")
         self.assertEqual(response.status_code, 200)
 
-    def test_product_post_fail_response(self):
+    def test_bulk_insert_post_fail_response(self):
         c = Client()
         products = [
             	{
@@ -128,7 +171,7 @@ class ProductView(TestCase):
                     content_type="application/json")
         self.assertEqual(response.status_code, 422)
 
-    def test_product_post_fail_validators(self):
+    def test_bulk_insert_post_fail_validators(self):
         c = Client()
         products = [
             	{
@@ -147,7 +190,7 @@ class ProductView(TestCase):
         self.assertTrue("Invalid discount value" in errors)
         self.assertTrue("Invalid stock value" in errors)
 
-    def test_product_post_fail_parse(self):
+    def test_bulk_insert_post_fail_parse(self):
         c = Client()
         products = [
             	{

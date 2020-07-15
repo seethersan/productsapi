@@ -9,10 +9,29 @@ from products.models import Product
 import json
 
 # Create your views here.
+@method_decorator(csrf_exempt, name='dispatch')
 class Products(View):
     def get(self, request, *args, **kwargs):
         products = Product.objects.all()
         return JsonResponse({"products": list(products.values())}, safe=False)
+
+    def post(self, request, *args, **kwargs):
+        data = json.loads(request.body.decode("utf-8"))
+        e = []        
+        try:
+            new_product = Product(**data)
+            new_product.full_clean()
+        except ValidationError as errors:
+            for error in errors:
+                e.append(error[1][0])
+            return JsonResponse(status=422, data={
+                "status": "ERROR",
+                "product_id": new_product.id,
+                "errors": e
+            }, safe=False)
+        else:
+            new_product.save()
+            return JsonResponse(status=200, data={"status": "OK"})
 
 @method_decorator(csrf_exempt, name='dispatch')
 class ProductsInsert(View):
