@@ -1,22 +1,38 @@
-from django.db import models
-from django.core.validators import MinLengthValidator, MaxLengthValidator, ValidationError
+from django.core.exceptions import ValidationError
 
-def validate_value(value):
-    if value <= 0 or value >= 99999.9:
-        raise ValidationError("Invalid value")
-
-def validate_stock(value):
-    if value <= -1:
-        raise ValidationError("Invalid stock value")
+from pynamodb.models import Model
+from pynamodb.attributes import (
+    UnicodeAttribute, NumberAttribute, UnicodeSetAttribute, UTCDateTimeAttribute
+)
 
 # Create your models here.
-class Product(models.Model):
-    id = models.CharField(max_length=10, primary_key=True)
-    name = models.CharField(max_length=100, validators=[MinLengthValidator(3, "Invalid product name"), MaxLengthValidator(55, "Invalid product name")])
-    value = models.FloatField(validators=[validate_value])
-    discount_value = models.FloatField()
-    stock = models.IntegerField(validators=[validate_stock])
+class Product(Model):
+    class Meta:
+        read_capacity_units = 10
+        write_capacity_units = 10
+        table_name = "Product"
+        host = "http://localhost:8787"
+    id = UnicodeAttribute(hash_key=True)
+    name = UnicodeAttribute(range_key=True)
+    value = NumberAttribute(default=0)
+    discount_value = NumberAttribute(default=0)
+    stock = NumberAttribute(default=0)
 
-    def clean(self):
+    def validate_product(self):
+        saved_product = [item.attribute_values for item in self.query(self.id)]
+        errors = []
+        if saved_product:
+            errors.append(ValidationError("{0} already exists".format(self.id)))
+        if len(self.name) < 2 and len(self.name) > 55:
+            errors.append(ValidationError("name", "Invalid self name"))
+        if self.stock < 0:
+            errors.append(ValidationError("stock", "Invalid stock value"))
+        if self.value <= 0 or self.value >= 99999.9:
+            errors.append(ValidationError("value", "Invalid value"))
         if self.discount_value >= self.value:
-            raise ValidationError({"discount_value": "Invalid discount value"})
+            errors.append(ValidationError("discout_value", "Invalid discount_value"))
+        if errors:
+            raise Exception(errors)
+
+if not Product.exists():
+    Product.create_table(wait=True)
