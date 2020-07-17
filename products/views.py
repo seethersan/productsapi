@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from django.views.generic import View
 from django.http import JsonResponse
+from django.http import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.utils.decorators import method_decorator
 from django.core.exceptions import ValidationError
@@ -9,6 +10,11 @@ from products.models import Product
 import json
 
 # Create your views here.
+
+class healthCheck(View):
+    def get(self, request, *args, **kwargs):
+        return HttpResponse(status=200) 
+
 @method_decorator(csrf_exempt, name='dispatch')
 class Products(View):
     def get(self, request, *args, **kwargs):

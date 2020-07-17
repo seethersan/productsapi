@@ -20,6 +20,7 @@ from django.conf.urls import include
 from products import views
 
 urlpatterns = [
+    path('', views.healthCheck.as_view(), name="healtcheck"),
     path('admin/', admin.site.urls),
     path('api/', include([
         path('products/', include([
