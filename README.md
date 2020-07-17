@@ -1,4 +1,5 @@
-Django 3 project ready to deploy in AWS ElasticBeanstalk (Amazon Linux with python 3.6)
+Django 2 project ready to deploy in AWS Lambda/DynamoDB using Zappa library
+This serverless project use a DynamoDB table for storing
 
 **Instructions:**
 1. Create a virtualenv and activate
@@ -10,7 +11,7 @@ virtualenv env && source env/bin/activate
 2. Clone the repository
 
 ```
-git clone https://github.com/seethersan/productsapi.git
+git clone -b lambda https://github.com/seethersan/productsapi.git
 cd productsapi
 ```
 
@@ -20,31 +21,33 @@ cd productsapi
 pip install -r requirements.txt
 ```
 
-4. Install CLI for AWS Elastic Beanstalk
+5. Initialize Zappa config. 
+***You will need to configure awscli with your AWS account's credentials if you haven't done it before.***
 
 ```
-pip install awsebcli
+zappa init
+
+- Enter python3.7 as runtime
+- Enter your settings file
+- Enter your aws-region
+- Enter your project name
 ```
 
-5. Initialize Elastic Beanstalk App. 
-***You will need to configure awscli with your AWS account's credentials if you haven't done it before.
-Also, at the moment the ebextensions config files are only compatible with Amazon Linux with python 3.6***
+6. Modify the zappa_settings.json file and add this env variables
+***It will configure the lambda function to create the DynamoDB table***
 
 ```
-eb init
+"environment_variables": {
+    "read_capacity_units": "5",
+    "write_capacity_units": "5",
+    "region": "us-east-1"
+}
 ```
 
-6. Create environment and deploy app
-***It will create the RDS Postgres instance, set the RDS env variables and migrate the database***
+7. Deploy the Lambda Function
 
 ```
-eb create
-```
-
-7. Open app
-
-```
-eb open
+zappa deploy dev
 ```
 
 The app has 2 urls:
