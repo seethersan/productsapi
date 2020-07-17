@@ -1,3 +1,5 @@
+import os
+
 from django.core.exceptions import ValidationError
 
 from pynamodb.models import Model
@@ -8,10 +10,15 @@ from pynamodb.attributes import (
 # Create your models here.
 class Product(Model):
     class Meta:
-        read_capacity_units = 10
-        write_capacity_units = 10
+        if 'read_capacity_units' in os.environ:
+            read_capacity_units = int(os.environ['read_capacity_units'])
+        if 'write_capacity_units' in os.environ:
+            write_capacity_units = int(os.environ['write_capacity_units'])
         table_name = "Product"
-        host = "http://localhost:8787"
+        if 'region' in os.environ:
+            region = os.environ['region']
+        else:
+            host = "http://localhost:8787"
     id = UnicodeAttribute(hash_key=True)
     name = UnicodeAttribute(range_key=True)
     value = NumberAttribute(default=0)
