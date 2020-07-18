@@ -9,12 +9,6 @@ from products.models import Product
 
 import json
 
-# Create your views here.
-
-class healthCheck(View):
-    def get(self, request, *args, **kwargs):
-        return HttpResponse(status=200) 
-
 @method_decorator(csrf_exempt, name='dispatch')
 class Products(View):
     def get(self, request, *args, **kwargs):
