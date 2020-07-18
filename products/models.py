@@ -31,7 +31,7 @@ class Product(Model):
         if saved_product:
             errors.append(ValidationError("{0} already exists".format(self.id)))
         if len(self.name) < 2 and len(self.name) > 55:
-            errors.append(ValidationError("name", "Invalid self name"))
+            errors.append(ValidationError("name", "Invalid product name"))
         if self.stock < 0:
             errors.append(ValidationError("stock", "Invalid stock value"))
         if self.value <= 0 or self.value >= 99999.9:
