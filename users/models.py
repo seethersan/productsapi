@@ -26,17 +26,17 @@ class User(Model):
     name = UnicodeAttribute(range_key=True)
     profession = UnicodeAttribute()
 
-    def validate_product(self):
-        saved_user = [user.attribute_values for user in self.query(self.id)]
+    def validate_user(self):
+        saved_user = [user.attribute_values for user in self.query(self.document_id)]
         errors = []
         if saved_user:
-            errors.append(ValidationError("{0} already exists".format(self.id)))
+            errors.append(ValidationError("{0} already exists".format(self.document_id)))
         if len(self.document_id) < 8 and len(self.document_id) > 11:
-            errors.append(ValidationError("name", "Invalid User document"))
+            errors.append(ValidationError("document_id", "Invalid User document_id"))
         if len(self.name) < 2 and len(self.name) > 55:
             errors.append(ValidationError("name", "Invalid User name"))
         if len(self.profession) < 2 and len(self.profession) > 55:
-            errors.append(ValidationError("name", "Invalid Profession"))
+            errors.append(ValidationError("profession", "Invalid User profession"))
         if errors:
             raise Exception(errors)
 
