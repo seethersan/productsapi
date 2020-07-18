@@ -33,7 +33,7 @@ class Product(Model):
         saved_product = [item.attribute_values for item in self.query(self.id)]
         errors = []
         if saved_product:
-            errors.append(ValidationError("{0} already exists".format(self.id)))
+            errors.append(ValidationError("product", "{0} already exists".format(self.id)))
         if len(self.name) < 2 and len(self.name) > 55:
             errors.append(ValidationError("name", "Invalid product name"))
         if self.stock < 0:
@@ -41,7 +41,7 @@ class Product(Model):
         if self.value <= 0 or self.value >= 99999.9:
             errors.append(ValidationError("value", "Invalid value"))
         if self.discount_value >= self.value:
-            errors.append(ValidationError("discout_value", "Invalid discount_value"))
+            errors.append(ValidationError("discount_value", "Invalid discount_value"))
         if errors:
             raise Exception(errors)
 
