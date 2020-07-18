@@ -17,15 +17,16 @@ from django.contrib import admin
 from django.urls import path
 from django.conf.urls import include
 
-from products import views
+from products.views import Products, ProductsInsert
+from core.views import HealthCheck
 
 urlpatterns = [
-    path('', views.healthCheck.as_view(), name="healtcheck"),
+    path('', HealthCheck.as_view(), name="healtcheck"),
     path('admin/', admin.site.urls),
     path('api/', include([
         path('products/', include([
-            path('', views.Products.as_view(), name="get"),
-            path('bulk_insert', views.ProductsInsert.as_view(), name="insert")
+            path('', Products.as_view(), name="products"),
+            path('bulk_insert', ProductsInsert.as_view(), name="insert")
         ]))
     ])),
 ]
