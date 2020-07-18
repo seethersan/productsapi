@@ -17,8 +17,8 @@ class Products(View):
 
     def post(self, request, *args, **kwargs):
         data = json.loads(request.body.decode("utf-8"))
-        e = []        
-        try:            
+        e = []
+        try:
             new_product = Product(**data)
             new_product.validate_product()
         except Exception as errors:
@@ -44,25 +44,23 @@ class ProductsInsert(View):
         if products:
             with Product.batch_write() as batch:
                 for product in products:
+                    e = []
                     try:
-                        new_product = Product(**data)
+                        new_product = Product(**product)
                         new_product.validate_product()
                     except Exception as errors:
                         for error in errors.args[0]:
-                            e.append(error.args[0])
+                            e.append(error.args[1])
                         error_products.append({
                             "product_id": new_product.id,
                             "errors": e
                         })
-                    except Exception:
-                        parse_errors += 1
                     else:
                         new_products.append(new_product)
                 if error_products or parse_errors:
                     return JsonResponse(status=422, data={
                         "status": "ERROR",
-                        "products_report": error_products,
-                        "number_of_products_unable_to_parse": parse_errors
+                        "products_report": error_products
                     }, safe=False)
                 else:
                     for new_product in new_products:
