@@ -11,8 +11,12 @@ class User(Model):
     class Meta:
         if 'read_capacity_units' in os.environ:
             read_capacity_units = int(os.environ['read_capacity_units'])
+        else:
+            read_capacity_units = 1
         if 'write_capacity_units' in os.environ:
             write_capacity_units = int(os.environ['write_capacity_units'])
+        else: 
+            write_capacity_units = 1
         table_name = "User"
         if 'region' in os.environ:
             region = os.environ['region']
