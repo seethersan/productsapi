@@ -43,7 +43,7 @@ class Product(Model):
         if self.discount_value >= self.value:
             errors.append(ValidationError("discount_value", "Invalid discount_value"))
         if errors:
-            raise Exception(errors)
+            raise ValidationError(errors)
 
 if not Product.exists():
     Product.create_table(wait=True)

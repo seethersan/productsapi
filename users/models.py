@@ -38,7 +38,7 @@ class User(Model):
         if len(self.profession) < 2 and len(self.profession) > 55:
             errors.append(ValidationError("profession", "Invalid User profession"))
         if errors:
-            raise Exception(errors)
+            raise ValidationError(errors)
 
 if not User.exists():
     User.create_table(wait=True)

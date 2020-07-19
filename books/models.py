@@ -44,6 +44,8 @@ class Book(Model):
             errors.append(ValidationError("ISBN", "Invalid book's ISBN "))
         if len(self.genre) < 2 and len(self.genre) > 40:
             errors.append(ValidationError("genre", "Invalid book's genre"))
+        if errors:
+            raise ValidationError(errors)
 
 if not Book.exists():
     Book.create_table(wait=True)
