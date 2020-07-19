@@ -26,7 +26,7 @@ class Users(View):
         try:
             new_user = User(**data)
             new_user.validate_user()
-        except expression as identifier:
+        except Exception as errors:
             for error in errors.args[0]:
                 e.append(error.args[0])
                 return JsonResponse(status=422, data={
