@@ -39,7 +39,7 @@ class Books(View):
             return JsonResponse(status=200, data={"status": "OK"})
 
 @method_decorator(csrf_exempt, name='dispatch')
-class BookInsert(views):
+class BookInsert(View):
     def post(self, request, *args, **kwargs):
         data = json.loads(request.body.decode("utf-8"))
         error_books = []
