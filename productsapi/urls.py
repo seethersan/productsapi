@@ -18,6 +18,8 @@ from django.urls import path
 from django.conf.urls import include
 
 from products.views import Products, ProductsInsert
+from users.views import Users, UserInsert
+from books.views import Books, BookInsert
 from core.views import HealthCheck
 
 urlpatterns = [
@@ -26,7 +28,15 @@ urlpatterns = [
     path('api/', include([
         path('products/', include([
             path('', Products.as_view(), name="products"),
-            path('bulk_insert', ProductsInsert.as_view(), name="insert")
+            path('bulk_insert', ProductsInsert.as_view(), name="products_insert")
+        ])),
+        path('users/', include([
+            path('', Users.as_view(), name="users"),
+            path('bulk_insert', UserInsert.as_view(), name="users_insert")
+        ])),
+        path('books/', include([
+            path('', Books.as_view(), name="books"),
+            path('bulk_insert', BookInsert.as_view(), name="books_insert")
         ]))
     ])),
 ]
