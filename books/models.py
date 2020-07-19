@@ -34,13 +34,13 @@ class Book(Model):
         errors = []
         if saved_book:
             errors.append(ValidationError("book", "{0} already exists".format(self.id)))
-        if len(self.title) < 2 and len(self.title) > 75:
+        if len(self.title) < 2 and len(self.title) > 55:
             errors.append(ValidationError("title", "Invalid book title"))
         if len(self.editorial) < 2 and len(self.editorial) > 55:
             errors.append(ValidationError("editorial", "Invalid editorial book"))
         if len(self.author) < 2 and len(self.author) > 55:
             errors.append(ValidationError("author", "Invalid book's author"))
-        if len(self.ISNB) != 10 or len(self.ISBN) != 13:
+        if len(self.ISBN) != 10 and len(self.ISBN) != 13:
             errors.append(ValidationError("ISBN", "Invalid book's ISBN "))
         if len(self.genre) < 2 and len(self.genre) > 40:
             errors.append(ValidationError("genre", "Invalid book's genre"))
