@@ -74,7 +74,7 @@ The app has 2 urls:
 
     You can test it using curl:
     ```
-    curl --request GET http://productsapi-dev2.us-east-1.elasticbeanstalk.com/api/products/ 
+    curl --request GET https://60bqzz9f95.execute-api.us-east-1.amazonaws.com/dev/api/products/ 
 
     curl --header "Content-Type: application/json" \
         --request POST \
@@ -103,5 +103,5 @@ The app has 2 urls:
                 }
             ]
         }' \
-        http://productsapi-dev2.us-east-1.elasticbeanstalk.com/api/products/bulk_insert
+        https://60bqzz9f95.execute-api.us-east-1.amazonaws.com/dev/api/products/bulk_insert
     ```
