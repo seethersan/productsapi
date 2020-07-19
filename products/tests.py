@@ -5,8 +5,6 @@ from django.core.validators import ValidationError
 from products.models import Product
 from products.views import Products, ProductsInsert
 
-import json
-
 class ProductTest(TestCase):
 
     def test_name_min_length(self):

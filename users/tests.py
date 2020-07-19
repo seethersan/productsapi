@@ -3,8 +3,6 @@ from django.test import Client
 
 from users.models import User
 
-import json
-
 class UserTest(TestCase):
 
 
