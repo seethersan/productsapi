@@ -15,7 +15,7 @@ class Books(View):
         id = self.kwargs.get('id')
         if id:
             book = [book.attribute_values for book in self.query(id)]
-            return JsonResponse({"user_information": book}, safe=False)
+            return JsonResponse({"book_information": book}, safe=False)
         else:
             books = [item.attribute_values for item in Book.scan()]
             return JsonResponse({"books": books}, safe=False)
@@ -37,3 +37,39 @@ class Books(View):
         else:
             new_book.save()
             return JsonResponse(status=200, data={"status": "OK"})
+
+@method_decorator(csrf_exempt, name='dispatch')
+class BookInsert(views):
+    def post(self, request, *args, **kwargs):
+        data = json.loads(request.body.decode("utf-8"))
+        error_books = []
+        new_books = []
+        parse_errors = 0
+        books = data.get("books")
+        if books:
+            with Book.batch_write() as batch:
+                for book in books:
+                    try:
+                        new_book = Book(**book)
+                        new_book.validate_book()
+                    except ValidationError as errors:
+                        for error in errors.args[0]:
+                            e.append(error.args[1])
+                        error_books.append({
+                            "product_id": new_product.id,
+                            "errors": e
+                        })
+                    except Exception:
+                        parse_errors += 1
+                    else:
+                        new_books.append(new_product)
+                if error_books or parse_errors:
+                    return JsonResponse(status=422, data={
+                        "status": "ERROR",
+                        "books_report": error_books,
+                        "number_of_books_unable_to_parse": parse_errors
+                    }, safe=False)
+                else:
+                    for new_book in new_books:
+                        batch.save(new_book)
+                    return JsonResponse(status=200, data={"status": "OK"})
