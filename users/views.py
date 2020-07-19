@@ -14,7 +14,7 @@ class Users(View):
     def get(self, request, *args, **kwargs):
         document_id = self.kwargs.get('document_id')
         if document_id:
-            user = [user.attribute_values for user in self.query(document)]
+            user = [user.attribute_values for user in self.query(document_id)]
             return JsonResponse({"user_information": user}, safe=False)
         else:
             users = [item.attribute_values for item in User.scan()]
