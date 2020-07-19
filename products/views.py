@@ -48,19 +48,22 @@ class ProductsInsert(View):
                     try:
                         new_product = Product(**product)
                         new_product.validate_product()
-                    except Exception as errors:
+                    except ValidationError as errors:
                         for error in errors.args[0]:
                             e.append(error.args[1])
                         error_products.append({
                             "product_id": new_product.id,
                             "errors": e
                         })
+                    except Exception:
+                        parse_errors += 1
                     else:
                         new_products.append(new_product)
                 if error_products or parse_errors:
                     return JsonResponse(status=422, data={
                         "status": "ERROR",
-                        "products_report": error_products
+                        "products_report": error_products,
+                        "number_of_books_unable_to_parse": parse_errors
                     }, safe=False)
                 else:
                     for new_product in new_products:

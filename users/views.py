@@ -52,7 +52,7 @@ class UserInsert(View):
                     try:
                         new_user = User(**user)
                         new_user.validate_user()
-                    except Exception as errors:
+                    except ValidationError as errors:
                         for error in errors.args[0]:
                             e.append(error.args[0])
                         error_users.append({
