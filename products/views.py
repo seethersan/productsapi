@@ -2,12 +2,7 @@ from rest_framework import viewsets
 
 from .serializers import ProductSerializer, CategorySerializer
 
-from django.views.decorators.csrf import csrf_exempt
-from django.utils.decorators import method_decorator
-from django.core.exceptions import ValidationError
-from products.models import Product, Category
-
-import json
+from .models import Product, Category
 
 class ProductViewSet(viewsets.ModelViewSet):    
     queryset = Product.objects.all().order_by('id')
