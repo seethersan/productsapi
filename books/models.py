@@ -27,7 +27,7 @@ class Book(models.Model):
     id = models.CharField(max_length=10, primary_key=True)
     title = models.CharField(max_length=70, validators=[MinLengthValidator(3, "Invalid book title"), MaxLengthValidator(70, "Invalid book title")])
     ISBN = models.CharField(max_length=13, validators=[MinLengthValidator(10, "Invalid ISBN"), MaxLengthValidator(13, "Invalid ISBN")])
-    pubhishers = models.ManyToManyField(Publisher)
+    publishers = models.ManyToManyField(Publisher)
     authors = models.ManyToManyField(Author)
     genres = models.ManyToManyField(Genre)
 
