@@ -16,15 +16,12 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 from django.conf.urls import include
+from django.conf.urls.static import static
+from django.conf import settings
 
 from products import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('api/', include([
-        path('products/', include([
-            path('', views.Products.as_view(), name="get"),
-            path('bulk_insert', views.ProductsInsert.as_view(), name="insert")
-        ]))
-    ])),
-]
+    path('', include('products.urls')),
+] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
