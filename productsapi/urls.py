@@ -18,10 +18,23 @@ from django.urls import path
 from django.conf.urls import include
 from django.conf.urls.static import static
 from django.conf import settings
+from rest_framework import routers
 
-from products import views
+from products import urls as products_urls
+from books import urls as books_urls
+
+routeLists = [
+    products_urls.routeList,
+    books_urls.routeList,
+]
+
+router = routers.DefaultRouter()
+for routeList in routeLists:
+    for route in routeList:
+        router.register(route[0], route[1])
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', include('products.urls')),
+    path('api/', include(router.urls)),
+    path('api-auth/', include('rest_framework.urls', namespace='rest_framework'))
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
