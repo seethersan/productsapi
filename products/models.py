@@ -12,8 +12,8 @@ def validate_stock(value):
 # Create your models here.
 class Category(models.Model):
     id = models.CharField(max_length=10, primary_key=True)
-    name = models.CharField(max_length=100, validators=[MinLengthValidator(3, "Invalid product name"), MaxLengthValidator(55, "Invalid product name")])
-    description = models.CharField(max_length=250, validators=[MinLengthValidator(3, "Invalid product name"), MaxLengthValidator(250, "Invalid product name")])
+    name = models.CharField(max_length=100, validators=[MinLengthValidator(3, "Invalid category name"), MaxLengthValidator(55, "Invalid category name")])
+    description = models.CharField(max_length=250, validators=[MinLengthValidator(3, "Invalid category description"), MaxLengthValidator(250, "Invalid category description")])
 
     def __str__(self):
         return self.name
