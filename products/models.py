@@ -17,6 +17,9 @@ class Product(models.Model):
     discount_value = models.FloatField()
     stock = models.IntegerField(validators=[validate_stock])
 
+    def __str__(self):
+        return self.name
+
     def clean(self):
         if self.discount_value >= self.value:
             raise ValidationError({"discount_value": "Invalid discount value"})
