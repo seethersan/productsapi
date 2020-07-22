@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'products',
     'books',
     'core',
+    'users',
     'django_s3_storage',
     'drf_yasg'
 ]
