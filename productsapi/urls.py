@@ -22,6 +22,7 @@ from rest_framework import routers
 
 from products import urls as products_urls
 from books import urls as books_urls
+from core.views import HealthCheck
 
 routeLists = [
     products_urls.routeList,
@@ -34,6 +35,7 @@ for routeList in routeLists:
         router.register(route[0], route[1])
 
 urlpatterns = [
+    path('', HealthCheck.as_view(), name="healtcheck"),
     path('admin/', admin.site.urls),
     path('api/', include(router.urls)),
     path('api-auth/', include('rest_framework.urls', namespace='rest_framework'))
