@@ -23,7 +23,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = '8z4ca&cxh2oyrm#3h9z_ikboy8u&qb-*gndg9l!i)d2xua5@v@'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = ['*']
 
@@ -41,7 +41,8 @@ INSTALLED_APPS = [
     'products',
     'books',
     'core',
-    'django_s3_storage'
+    'django_s3_storage',
+    'drf_yasg'
 ]
 
 MIDDLEWARE = [
@@ -135,18 +136,16 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
 
-USE_S3 = os.getenv('USE_S3') == 'TRUE'
+USE_S3 = os.environ.get('USE_S3') == 'TRUE'
 
 if USE_S3:
-    YOUR_S3_BUCKET = os.getenv('AWS_STORAGE_BUCKET_NAME')
+    YOUR_S3_BUCKET = os.environ.get('AWS_STORAGE_BUCKET_NAME')
     STATICFILES_STORAGE = "django_s3_storage.storage.StaticS3Storage"
     AWS_S3_BUCKET_NAME_STATIC = YOUR_S3_BUCKET
     AWS_S3_CUSTOM_DOMAIN = '%s.s3.amazonaws.com' % YOUR_S3_BUCKET
     STATIC_URL = "https://%s/" % AWS_S3_CUSTOM_DOMAIN
 else:
-    STATIC_URL = '/staticfiles/'
-    STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
-    MEDIA_URL = '/mediafiles/'
-    MEDIA_ROOT = os.path.join(BASE_DIR, 'mediafiles')
-
-STATICFILES_DIRS = (os.path.join(BASE_DIR, 'static'),)
+    STATIC_URL = '/static/'
+    STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+    MEDIA_URL = '/media/'
+    MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
