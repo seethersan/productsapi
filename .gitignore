@@ -6,3 +6,4 @@
 *.zip
 *.json
 /static
+*.DS_Store
