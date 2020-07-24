@@ -26,6 +26,7 @@ from drf_yasg import openapi
 
 from products import urls as products_urls
 from books import urls as books_urls
+from users.views import UserProfileAPIView
 from core.views import HealthCheck
 
 schema_view = get_schema_view(
@@ -58,5 +59,6 @@ urlpatterns = [
     path('', HealthCheck.as_view(), name="healtcheck"),
     path('admin/', admin.site.urls),
     path('api/', include(router.urls)),
+    path('api/me', UserProfileAPIView.as_view(), name='my_profile'),
     path('api-auth/', include('rest_framework.urls', namespace='rest_framework'))
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
