@@ -25,7 +25,18 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = '8z4ca&cxh2oyrm#3h9z_ikboy8u&qb-*gndg9l!i)d2xua5@v@'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
+
+if DEBUG:
+    import ptvsd
+    import sys
+    if "runserver" in sys.argv and os.environ.get("RUN_MAIN"):
+        try:
+            # Only run debugger for the server.
+            ptvsd.enable_attach(redirect_output=True)
+        except OSError:
+            print("Could not enable debugging, disabling. Exception:")
+            traceback.print_exc()
 
 ALLOWED_HOSTS = ['*']
 
