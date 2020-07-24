@@ -66,7 +66,7 @@ AUTHENTICATION_BACKENDS = [
 
 REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': (
-        'core.permissions.DenyAny',
+        'rest_framework.permissions.IsAuthenticated',
     ),
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_jwt.authentication.JSONWebTokenAuthentication',
@@ -112,8 +112,12 @@ if 'RDS_DB_NAME' in os.environ:
 else:
     DATABASES = {
         'default': {
-            'ENGINE': 'django.db.backends.sqlite3',
-            'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+            'ENGINE': 'django.db.backends.mysql',
+            'NAME': 'tokhna',
+            'USER': 'admin',
+            'PASSWORD': 'FdLBESvOoLAjbK7zaDgf',
+            'HOST': 'tokhna.cdn7wdipzauc.us-east-1.rds.amazonaws.com',
+            'PORT': '3306',
         }
     }
 
@@ -151,33 +155,34 @@ USE_L10N = True
 
 USE_TZ = True
 
-COGNITO_AWS_REGION = 'us-east-1'
-COGNITO_USER_POOL = 'us-east-1_mY8vAce1c'
-# Provide this value if `id_token` is used for authentication (it contains 'aud' claim).
-# `access_token` doesn't have it, in this case keep the COGNITO_AUDIENCE empty
-COGNITO_AUDIENCE = None
-COGNITO_POOL_URL = None  # will be set few lines of code later, if configuration provided
+if 'COGNITO_AWS_REGION' in os.environ:
+    COGNITO_AWS_REGION = os.environ['COGNITO_AWS_REGION']
+    COGNITO_USER_POOL = os.environ['COGNITO_USER_POOL']
+    # Provide this value if `id_token` is used for authentication (it contains 'aud' claim).
+    # `access_token` doesn't have it, in this case keep the COGNITO_AUDIENCE empty
+    COGNITO_AUDIENCE = os.environ['COGNITO_AUDIENCE']
+    COGNITO_POOL_URL = None  # will be set few lines of code later, if configuration provided
 
-rsa_keys = {}
-# To avoid circular imports, we keep this logic here.
-# On django init we download jwks public keys which are used to validate jwt tokens.
-# For now there is no rotation of keys (seems like in Cognito decided not to implement it)
-if COGNITO_AWS_REGION and COGNITO_USER_POOL:
-    COGNITO_POOL_URL = 'https://cognito-idp.{}.amazonaws.com/{}'.format(COGNITO_AWS_REGION, COGNITO_USER_POOL)
-    pool_jwks_url = COGNITO_POOL_URL + '/.well-known/jwks.json'
-    jwks = json.loads(request.urlopen(pool_jwks_url).read())
-    rsa_keys = {key['kid']: json.dumps(key) for key in jwks['keys']}
+    rsa_keys = {}
+    # To avoid circular imports, we keep this logic here.
+    # On django init we download jwks public keys which are used to validate jwt tokens.
+    # For now there is no rotation of keys (seems like in Cognito decided not to implement it)
+    if COGNITO_AWS_REGION and COGNITO_USER_POOL:
+        COGNITO_POOL_URL = 'https://cognito-idp.{}.amazonaws.com/{}'.format(COGNITO_AWS_REGION, COGNITO_USER_POOL)
+        pool_jwks_url = COGNITO_POOL_URL + '/.well-known/jwks.json'
+        jwks = json.loads(request.urlopen(pool_jwks_url).read())
+        rsa_keys = {key['kid']: json.dumps(key) for key in jwks['keys']}
 
 
-JWT_AUTH = {
-    'JWT_PAYLOAD_GET_USERNAME_HANDLER': 'core.api.jwt.get_username_from_payload_handler',
-    'JWT_DECODE_HANDLER': 'core.api.jwt.cognito_jwt_decode_handler',
-    'JWT_PUBLIC_KEY': rsa_keys,
-    'JWT_ALGORITHM': 'RS256',
-    'JWT_AUDIENCE': COGNITO_AUDIENCE,
-    'JWT_ISSUER': COGNITO_POOL_URL,
-    'JWT_AUTH_HEADER_PREFIX': 'Bearer',
-}
+    JWT_AUTH = {
+        'JWT_PAYLOAD_GET_USERNAME_HANDLER': 'core.utils.jwt.get_username_from_payload_handler',
+        'JWT_DECODE_HANDLER': 'core.utils.jwt.cognito_jwt_decode_handler',
+        'JWT_PUBLIC_KEY': rsa_keys,
+        'JWT_ALGORITHM': 'RS256',
+        'JWT_AUDIENCE': COGNITO_AUDIENCE,
+        'JWT_ISSUER': COGNITO_POOL_URL,
+        'JWT_AUTH_HEADER_PREFIX': 'Bearer',
+    }
 
 
 # Static files (CSS, JavaScript, Images)
