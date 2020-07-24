@@ -27,18 +27,13 @@ SECRET_KEY = '8z4ca&cxh2oyrm#3h9z_ikboy8u&qb-*gndg9l!i)d2xua5@v@'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-if DEBUG:
-    import ptvsd
-    import sys
-    if "runserver" in sys.argv and os.environ.get("RUN_MAIN"):
-        try:
-            # Only run debugger for the server.
-            ptvsd.enable_attach(redirect_output=True)
-        except OSError:
-            print("Could not enable debugging, disabling. Exception:")
-            traceback.print_exc()
-
 ALLOWED_HOSTS = ['*']
+
+if 'SERVERTYPE' in os.environ and os.environ['SERVERTYPE'] == 'AWS Lambda':
+    json_data = open('zappa_settings.json')
+    env_vars = json.load(json_data)['dev']['aws_environment_variables']
+    for key, val in env_vars.items():
+        os.environ[key] = val
 
 
 # Application definition
