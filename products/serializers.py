@@ -6,7 +6,7 @@ class ProductSerializer(serializers.ModelSerializer):
     brands = serializers.PrimaryKeyRelatedField(queryset=Brand.objects.all(), many=True)
     class Meta:
         model = Product
-        fields = ('id', 'name', 'value', 'discount_value', 'stock', 'categories', 'brands')
+        fields = ('id', 'name', 'value', 'discount_value', 'stock', 'categories', 'brands', 'image')
         extra_kwargs = {'categories': {'required': False}, 'brands': {'required': True}}
 
 class CategorySerializer(serializers.ModelSerializer):

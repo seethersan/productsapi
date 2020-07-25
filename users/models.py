@@ -3,9 +3,15 @@ from django.db import models
 from django.contrib.auth.base_user import AbstractBaseUser
 from django.contrib.auth.models import PermissionsMixin, UserManager
 from django.contrib.auth.validators import UnicodeUsernameValidator
+from django.core.validators import MinLengthValidator, MaxLengthValidator
 
 from core.models import AbstractBaseModel
 
+from core.utils.storage import get_storage
+
+class Profession(models.Model):
+    id = models.CharField(max_length=10, primary_key=True)
+    name = models.CharField(max_length=100, validators=[MinLengthValidator(2, "Invalid profession name"), MaxLengthValidator(50, "Invalid profession name")])
 
 class User(PermissionsMixin, AbstractBaseUser, AbstractBaseModel):
     """
@@ -41,6 +47,9 @@ class User(PermissionsMixin, AbstractBaseUser, AbstractBaseModel):
         default=False,
         help_text='Designates whether the user can log into this admin site.'
     )
+
+    profile_image = models.ImageField(storage=get_storage(), editable=True, null=True, blank=True)
+    professions = models.ManyToManyField(Profession)
 
     objects = UserManager()
 

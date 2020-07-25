@@ -1,6 +1,8 @@
 from django.db import models
 from django.core.validators import MinLengthValidator, MaxLengthValidator, ValidationError
 
+from core.utils.storage import get_storage
+
 def validate_value(value):
     if value <= 0 or value >= 99999.9:
         raise ValidationError("Invalid value")
@@ -9,7 +11,6 @@ def validate_stock(value):
     if value <= -1:
         raise ValidationError("Invalid stock value")
 
-# Create your models here.
 class Category(models.Model):
     id = models.CharField(max_length=10, primary_key=True)
     name = models.CharField(max_length=100, validators=[MinLengthValidator(3, "Invalid category name"), MaxLengthValidator(55, "Invalid category name")])
@@ -33,6 +34,7 @@ class Product(models.Model):
     categories = models.ManyToManyField(Category)
     brands = models.ManyToManyField(Brand)
     stock = models.IntegerField(validators=[validate_stock])
+    image = models.ImageField(storage=get_storage(), editable=True, null=True, blank=True)
 
     def __str__(self):
         return self.name
