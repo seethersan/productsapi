@@ -26,7 +26,8 @@ from drf_yasg import openapi
 
 from products import urls as products_urls
 from books import urls as books_urls
-from users.views import UserProfileAPIView
+from users import urls as user_urls
+from users.views import UserProfileAPIView, ProfessionViewSet, UserViewSet
 from core.views import HealthCheck
 
 schema_view = get_schema_view(
@@ -45,6 +46,7 @@ schema_view = get_schema_view(
 routeLists = [
     products_urls.routeList,
     books_urls.routeList,
+    user_urls.routeList
 ]
 
 router = routers.DefaultRouter()
