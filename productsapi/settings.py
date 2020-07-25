@@ -76,6 +76,8 @@ REST_FRAMEWORK = {
     ),
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_jwt.authentication.JSONWebTokenAuthentication',
+        'rest_framework.authentication.BasicAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
     ),
 }
 
@@ -104,7 +106,7 @@ WSGI_APPLICATION = 'productsapi.wsgi.application'
 # https://docs.djangoproject.com/en/3.0/ref/settings/#databases
 
 
-if 'RDS_DB_NAME' in os.environ:
+if 'RDS_DB_NAME' in os.environ and os.environ['RDS_DB_NAME'] != '':
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.mysql',
@@ -120,9 +122,9 @@ else:
         'default': {
             'ENGINE': 'django.db.backends.mysql',
             'NAME': 'tokhna',
-            'USER': 'admin',
-            'PASSWORD': 'FdLBESvOoLAjbK7zaDgf',
-            'HOST': 'tokhna.cdn7wdipzauc.us-east-1.rds.amazonaws.com',
+            'USER': 'root',
+            'PASSWORD': 'Ju12An34',
+            'HOST': '127.0.0.1',
             'PORT': '3306',
         }
     }
